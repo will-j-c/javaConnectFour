@@ -1,6 +1,5 @@
 import java.util.Random;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class ConnectFour {
     Board board;
@@ -44,14 +43,27 @@ public class ConnectFour {
     }
 
     private void onePlayerGame() {
-        // this.playerOne = new HumanPlayer(this.playerOneInput, this.display,
-        // this.board);
-        // this.playerTwo = new ComputerPlayer();
+        this.display.displayInfoMessage("Player 1, please choose your colour (\"r\" or \"y\"):");
+        char playerOneColour = getColourSelection();
+        char playerTwoColour = playerOneColour == 'r' ? 'y' : 'r';
+        this.playerOne = new HumanPlayer(this.playerOneInput, this.display, this.board, playerOneColour);
+        this.playerTwo = new ComputerPlayer(this.display, this.board, playerTwoColour);
+
+        this.display.displayInfoMessage("Player 1, please enter your name:");
+        String name = this.playerOneInput.stringInput();
+        this.playerOne.setName(name);
+
+        Random rand = new Random();
+        int startPlayer = rand.nextInt(2);
+        this.display.displayInfoMessage("Welcome, " + this.playerOne.getName());
+        this.activePlayer = startPlayer == 0 ? this.playerOne : this.playerTwo;
+        this.display.displayInfoMessage(this.activePlayer.getName() + " will go first.");
+        gameLoop();
     }
 
     private void twoPlayerGame() {
         this.display.displayInfoMessage("Player 1, please choose your colour (\"r\" or \"y\"):");
-        char playerOneColour = this.playerOneInput.charInput();
+        char playerOneColour = getColourSelection();
         char playerTwoColour = playerOneColour == 'r' ? 'y' : 'r';
         this.playerOne = new HumanPlayer(this.playerOneInput, this.display, this.board, playerOneColour);
         this.playerTwo = new HumanPlayer(this.playerTwoInput, this.display, this.board, playerTwoColour);
@@ -72,6 +84,18 @@ public class ConnectFour {
         gameLoop();
     }
 
+    private char getColourSelection() {
+        while (true) {
+            char colChar = this.playerOneInput.charInput();
+            if (colChar == 'r' || colChar == 'y') {
+                return colChar;
+            } else {
+                this.display.displayErrorMessage("Please enter a valid colour");
+            }
+        }
+
+    }
+
     private void gameLoop() {
         try {
             while (!this.isWin && !this.isDraw) {
@@ -86,7 +110,14 @@ public class ConnectFour {
             }
             if (this.isWin) {
                 this.display.displayBoard(this.board.getBoard());
-                this.display.displayInfoMessage(this.activePlayer.getName() + " wins!!!!");
+                if (!this.activePlayer.getName().equals("The Computer")) {
+                    this.display.displayInfoMessage(this.activePlayer.getName() + " wins!!!!");
+                    this.display.displayInfoMessage("Congratulations!!!");
+                } else {
+                    this.display.displayInfoMessage(this.activePlayer.getName() + " wins!!!!");
+                    this.display.displayInfoMessage("Better luck next time!!!");
+                }
+                
             }
             if (this.isDraw) {
                 this.display.displayBoard(this.board.getBoard());
@@ -94,7 +125,9 @@ public class ConnectFour {
             }
         } finally {
             this.playerOneInput.close();
-            this.playerTwoInput.close();
+            if (!this.playerTwo.getName().equals("The Computer")) {
+                this.playerTwoInput.close();
+            }
         }
     }
 
@@ -202,7 +235,6 @@ public class ConnectFour {
                 if (board[i][j] == colour) {
                     count += 1;
                     int[][][] toCheck = toCheckFourInADiag(j, i);
-                    System.out.println(count);
                     // Loop through each check to make
                     for (int k = 0; k < toCheck.length; k++) {
                         for (int[] coords : toCheck[k]) {
@@ -218,7 +250,6 @@ public class ConnectFour {
                             }
                         }
                     }
-
                     if (count == 4) {
                         this.isWin = true;
                         return;

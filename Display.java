@@ -6,6 +6,8 @@ public class Display implements Displayable {
     public static final String ANSI_BOARD_BACKGROUND = "\u001B[46m";
     public static final String ANSI_YELLOW_BACKGROUND = "\u001B[43m";
     public static final String ANSI_RED_BACKGROUND = "\u001B[41m";
+    public static final String ANSI_RED_TEXT = "\u001B[31m";
+    public static final String ANSI_GREEN_TEXT = "\u001B[32m";
 
     /**
      * 
@@ -66,7 +68,7 @@ public class Display implements Displayable {
      */
     @Override
     public void displayInfoMessage(String message) {
-        System.out.println(message);
+        System.out.println(ANSI_GREEN_TEXT + message + ANSI_RESET);
     }
 
     /**
@@ -74,6 +76,6 @@ public class Display implements Displayable {
      */
     @Override
     public void displayErrorMessage(String message) {
-        System.out.println(message);
+        System.out.println(ANSI_RED_TEXT + message + ANSI_RESET);
     }
 }
