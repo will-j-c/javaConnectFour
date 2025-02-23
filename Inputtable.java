@@ -6,6 +6,8 @@ public interface Inputtable {
 
     public String stringInput();
 
+    public char charInput();
+
     public void next();
 
     public void close();

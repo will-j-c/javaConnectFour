@@ -11,12 +11,20 @@ public class Input implements Inputtable {
     @Override
     public int intInput() {
         int input = this.scanner.nextInt();
+        next();
         return input;
     }
 
     @Override
     public String stringInput() {
         String input = this.scanner.nextLine();
+        return input;
+    }
+
+    @Override
+    public char charInput() {
+        char input = this.scanner.next().charAt(0);
+        next();
         return input;
     }
 

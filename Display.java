@@ -48,6 +48,7 @@ public class Display implements Displayable {
                 System.out.print(ANSI_BOARD_BACKGROUND + (i + 1) + "   " + ANSI_RESET);
             }
         }
+        System.out.println();
     }
 
     private String spaceString(char c, boolean terminal) {
@@ -57,7 +58,7 @@ public class Display implements Displayable {
         if (c == 'r') {
             return ANSI_RED_BACKGROUND + " " + c + " " + ANSI_RESET + ANSI_BOARD_BACKGROUND + "|" + ANSI_RESET;
         }
-        return ANSI_BOARD_BACKGROUND + c;
+        return ANSI_BOARD_BACKGROUND + " " + c + " " + ANSI_RESET + ANSI_BOARD_BACKGROUND + "|" + ANSI_RESET;
     }
 
     /**
