@@ -76,7 +76,6 @@ public class ConnectFour {
         try {
             while (!this.isWin && !this.isDraw) {
                 this.display.displayBoard(this.board.getBoard());
-                this.display.displayInfoMessage(this.activePlayer.getName() + " , please enter your move:");
                 ArrayList<Integer> validMoves = getValidMoves();
                 this.activePlayer.takeTurn(validMoves);
                 checkWinState(this.activePlayer.getColour());
@@ -85,8 +84,14 @@ public class ConnectFour {
                     this.toggleActivePlayer();
                 }
             }
-            this.display.displayBoard(this.board.getBoard());
-            this.display.displayInfoMessage(this.activePlayer.getName() + " wins!!!!");
+            if (this.isWin) {
+                this.display.displayBoard(this.board.getBoard());
+                this.display.displayInfoMessage(this.activePlayer.getName() + " wins!!!!");
+            }
+            if (this.isDraw) {
+                this.display.displayBoard(this.board.getBoard());
+                this.display.displayInfoMessage("The game is a draw");
+            }
         } finally {
             this.playerOneInput.close();
             this.playerTwoInput.close();
@@ -121,6 +126,7 @@ public class ConnectFour {
     private void checkWinState(char colour) {
         checkFourInARow(colour);
         checkFourInACol(colour);
+        checkFourInADiag(colour);
     }
 
     private void checkFourInARow(char colour) {
@@ -144,11 +150,32 @@ public class ConnectFour {
     private void checkFourInACol(char colour) {
         char[][] board = this.board.getBoard();
         int count = 0;
+        // Loop through the rows, from end (i.e. bottom of board)
         for (int i = board.length - 1; i >= 0; i--) {
+            // Loop through the columns
             for (int j = 0; j < board[i].length; j++) {
                 if (board[i][j] == colour) {
-                    int[][] toCheck = toCheck(j, i);
-                    System.out.println(Arrays.deepToString(toCheck));
+                    count += 1;
+                    int[][] toCheck = toCheckFourInACol(j, i);
+                    // Loop through the coordinates to check if they are all the same colour
+                    for (int[] coords : toCheck) {
+                        try {
+                            if (board[coords[0]][coords[1]] == colour) {
+                                count += 1;
+                            } else {
+                                count = 0;
+                                break;
+                            }
+                        } catch (IndexOutOfBoundsException e) {
+                            // If the index is out of range, there is not 4 so exit the loop of toCheck and
+                            // continue
+                            break;
+                        }
+                    }
+                    if (count == 4) {
+                        this.isWin = true;
+                        return;
+                    }
                 } else {
                     count = 0;
                 }
@@ -156,19 +183,90 @@ public class ConnectFour {
         }
     }
 
-    private int[][] toCheck(int colPos, int row) {
+    private int[][] toCheckFourInACol(int colPos, int rowPos) {
         int[][] toCheck = new int[3][2];
         for (int i = 1; i <= 3; i++) {
             int x = colPos;
-            int y = row - i;
-            toCheck[i-1][0] = y;
-            toCheck[i-1][1] = x;
+            int y = rowPos - i;
+            toCheck[i - 1][0] = y;
+            toCheck[i - 1][1] = x;
         }
         return toCheck;
     }
 
     private void checkFourInADiag(char colour) {
+        char[][] board = this.board.getBoard();
+        int count = 0;
+        for (int i = board.length - 1; i >= 0; i--) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (board[i][j] == colour) {
+                    count += 1;
+                    int[][][] toCheck = toCheckFourInADiag(j, i);
+                    System.out.println(count);
+                    // Loop through each check to make
+                    for (int k = 0; k < toCheck.length; k++) {
+                        for (int[] coords : toCheck[k]) {
+                            try {
+                                if (board[coords[0]][coords[1]] == colour) {
+                                    count += 1;
+                                } else {
+                                    count = 0;
+                                    break;
+                                }
+                            } catch (IndexOutOfBoundsException e) {
+                                // Do nothing, continue to check
+                            }
+                        }
+                    }
 
+                    if (count == 4) {
+                        this.isWin = true;
+                        return;
+                    }
+                } else {
+                    count = 0;
+                }
+            }
+        }
+    }
+
+    private int[][][] toCheckFourInADiag(int colPos, int rowPos) {
+        int[][][] toCheck = new int[4][3][2];
+        for (int i = 1; i <= 4; i++) {
+            if (i == 1) {
+                for (int j = 1; j <= 3; j++) {
+                    int x = colPos + j;
+                    int y = rowPos + j;
+                    toCheck[i - 1][j - 1][0] = y;
+                    toCheck[i - 1][j - 1][1] = x;
+                }
+            }
+            if (i == 2) {
+                for (int j = 1; j <= 3; j++) {
+                    int x = colPos + j;
+                    int y = rowPos - j;
+                    toCheck[i - 1][j - 1][0] = y;
+                    toCheck[i - 1][j - 1][1] = x;
+                }
+            }
+            if (i == 3) {
+                for (int j = 1; j <= 3; j++) {
+                    int x = colPos - j;
+                    int y = rowPos + j;
+                    toCheck[i - 1][j - 1][0] = y;
+                    toCheck[i - 1][j - 1][1] = x;
+                }
+            }
+            if (i == 4) {
+                for (int j = 1; j <= 3; j++) {
+                    int x = colPos - j;
+                    int y = rowPos - j;
+                    toCheck[i - 1][j - 1][0] = y;
+                    toCheck[i - 1][j - 1][1] = x;
+                }
+            }
+        }
+        return toCheck;
     }
 
     private void checkDrawState() {

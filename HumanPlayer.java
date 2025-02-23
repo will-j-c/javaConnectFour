@@ -15,9 +15,12 @@ public class HumanPlayer extends Player {
     @Override
     public void takeTurn(ArrayList<Integer> validMoves) {
         boolean validMove = false;
+        String colour = getColour() == 'r' ? "red" : "yellow";
+        this.display.displayInfoMessage(getName() + " , you are " + colour);
+        this.display.displayInfoMessage("Please enter your move:");
         try {
-            int selection = this.playerInput.intInput();
             while (!validMove) {
+                int selection = this.playerInput.intInput();
                 if (validMoves.contains(selection)) {
                     this.board.updateBoard(selection, this.colour);
                     break;
@@ -30,6 +33,5 @@ public class HumanPlayer extends Player {
             this.playerInput.next();
             takeTurn(validMoves);
         }
-
     }
 }
