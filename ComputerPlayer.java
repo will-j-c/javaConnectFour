@@ -1,16 +1,30 @@
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * 
+ */
 public class ComputerPlayer extends Player {
+    /**
+     * 
+     */
     Display display;
 
-    // Constructor
+    /**
+     * 
+     * @param display
+     * @param board
+     * @param colour
+     */
     ComputerPlayer(Display display, Board board, char colour) {
         super(board, colour);
         this.display = display;
         setName("The Computer");
     }
 
+    /**
+     * 
+     */
     @Override
     public void takeTurn(ArrayList<Integer[]> validMoves) {
         Random rand = new Random();

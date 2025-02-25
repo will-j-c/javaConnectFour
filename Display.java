@@ -2,11 +2,29 @@
  * 
  */
 public class Display implements Displayable {
+    /**
+     * 
+     */
     public static final String ANSI_RESET = "\u001B[0m";
+    /**
+     * 
+     */
     public static final String ANSI_BOARD_BACKGROUND = "\u001B[46m";
+    /**
+     * 
+     */
     public static final String ANSI_YELLOW_BACKGROUND = "\u001B[43m";
+    /**
+     * 
+     */
     public static final String ANSI_RED_BACKGROUND = "\u001B[41m";
+    /**
+     * 
+     */
     public static final String ANSI_RED_TEXT = "\u001B[31m";
+    /**
+     * 
+     */
     public static final String ANSI_GREEN_TEXT = "\u001B[32m";
 
     /**
@@ -53,6 +71,12 @@ public class Display implements Displayable {
         System.out.println();
     }
 
+    /**
+     * 
+     * @param c
+     * @param terminal
+     * @return
+     */
     private String spaceString(char c, boolean terminal) {
         if (c == 'y') {
             return ANSI_YELLOW_BACKGROUND + " " + c + " " + ANSI_RESET + ANSI_BOARD_BACKGROUND + "|" + ANSI_RESET;

@@ -233,10 +233,11 @@ public class ConnectFour {
             System.out.println(Arrays.deepToString(lineToCheck));
             for (Integer[] coord : lineToCheck) {
                 this.board.updateBoard(coord, 'x');
-                
+
                 if (this.board.getPieceAtPosition(coord) == colour) {
                     System.out.println("Active player colour; " + colour);
-                    System.out.println("Piece at " + Arrays.deepToString(coord) + " is " + this.board.getPieceAtPosition(coord));
+                    System.out.println(
+                            "Piece at " + Arrays.deepToString(coord) + " is " + this.board.getPieceAtPosition(coord));
                     count += 1;
                     System.out.println(count);
                 } else {
@@ -315,6 +316,11 @@ public class ConnectFour {
         return linesToCheck;
     }
 
+    /**
+     * 
+     * @param line
+     * @return
+     */
     private boolean isValidLine(Integer[][] line) {
         for (Integer[] coord : line) {
             Integer row = coord[0];
@@ -326,6 +332,14 @@ public class ConnectFour {
         return true;
     }
 
+    /**
+     * 
+     * @param rowPos
+     * @param colPos
+     * @param increaseX
+     * @param increaseY
+     * @return
+     */
     private Integer[][] generateDiagLine(int rowPos, int colPos, boolean increaseX, boolean increaseY) {
         Integer[][] lineToCheck = new Integer[3][2];
         for (int j = 1; j <= 3; j++) {
@@ -350,6 +364,13 @@ public class ConnectFour {
         return lineToCheck;
     }
 
+    /**
+     * 
+     * @param rowPos
+     * @param colPos
+     * @param advancing
+     * @return
+     */
     private Integer[][] generateRowLine(int rowPos, int colPos, boolean advancing) {
         Integer[][] lineToCheck = new Integer[3][2];
         for (int j = 1; j <= 3; j++) {
@@ -367,6 +388,13 @@ public class ConnectFour {
         return lineToCheck;
     }
 
+    /**
+     * 
+     * @param rowPos
+     * @param colPos
+     * @param advancing
+     * @return
+     */
     private Integer[][] generateColLine(int rowPos, int colPos, boolean advancing) {
         Integer[][] lineToCheck = new Integer[3][2];
         for (int j = 1; j <= 3; j++) {
