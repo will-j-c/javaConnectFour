@@ -15,9 +15,6 @@ public class HumanPlayer extends Player {
 
     @Override
     public void takeTurn(ArrayList<Integer[]> validMoves) {
-        for (Integer[] entry : validMoves) {
-            System.out.println(Arrays.deepToString(entry));
-        }
         boolean validMove = false;
         ArrayList<Integer> validCols = validCols(validMoves);
         String colour = getColour() == 'r' ? "red" : "yellow";
@@ -52,7 +49,6 @@ public class HumanPlayer extends Player {
             validCols.add(validMoves.get(i)[1]);
         }
         validCols.sort(null);
-        System.out.println(validCols);
         return validCols;
     }
 }

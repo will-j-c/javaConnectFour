@@ -151,10 +151,10 @@ public class ConnectFour {
         try {
             while (!this.isWin && !this.isDraw) {
                 this.display.displayBoard(this.board.getBoard());
+                this.board.removeX();
                 ArrayList<Integer[]> validMoves = getValidMoves();
                 this.activePlayer.takeTurn(validMoves);
-                System.out.println(Arrays.deepToString(this.activePlayer.getLastMove()));
-                // checkWinState(this.activePlayer.getColour());
+                checkWinState(this.activePlayer.getColour(), this.activePlayer.getLastMove());
                 checkDrawState();
                 if (!this.isWin && !this.isDraw) {
                     this.toggleActivePlayer();
@@ -223,8 +223,32 @@ public class ConnectFour {
      * 
      * @param colour
      */
-    private void checkWinState(char colour) {
-
+    private void checkWinState(char colour, Integer[] position) {
+        int rowPos = position[0];
+        int colPos = position[1];
+        ArrayList<Integer[][]> linesToCheck = toCheck(rowPos, colPos);
+        int count;
+        for (Integer[][] lineToCheck : linesToCheck) {
+            count = 1;
+            System.out.println(Arrays.deepToString(lineToCheck));
+            for (Integer[] coord : lineToCheck) {
+                this.board.updateBoard(coord, 'x');
+                
+                if (this.board.getPieceAtPosition(coord) == colour) {
+                    System.out.println("Active player colour; " + colour);
+                    System.out.println("Piece at " + Arrays.deepToString(coord) + " is " + this.board.getPieceAtPosition(coord));
+                    count += 1;
+                    System.out.println(count);
+                } else {
+                    count = 0;
+                    // break;
+                }
+            }
+            if (count >= 4) {
+                this.isWin = true;
+                // break;
+            }
+        }
     }
 
     /**
@@ -233,43 +257,131 @@ public class ConnectFour {
      * @param rowPos
      * @return
      */
-    private int[][][] toCheck(int colPos, int rowPos) {
-        int[][][] toCheck = new int[4][3][2];
-        for (int i = 1; i <= 4; i++) {
+    private ArrayList<Integer[][]> toCheck(int rowPos, int colPos) {
+        ArrayList<Integer[][]> linesToCheck = new ArrayList<Integer[][]>();
+        for (int i = 1; i <= 8; i++) {
+            // Diagonal
             if (i == 1) {
-                for (int j = 1; j <= 3; j++) {
-                    int x = colPos + j;
-                    int y = rowPos + j;
-                    toCheck[i - 1][j - 1][0] = y;
-                    toCheck[i - 1][j - 1][1] = x;
+                Integer[][] lineToCheck = generateDiagLine(rowPos, colPos, true, true);
+                if (isValidLine(lineToCheck)) {
+                    linesToCheck.add(lineToCheck);
                 }
             }
             if (i == 2) {
-                for (int j = 1; j <= 3; j++) {
-                    int x = colPos + j;
-                    int y = rowPos - j;
-                    toCheck[i - 1][j - 1][0] = y;
-                    toCheck[i - 1][j - 1][1] = x;
+                Integer[][] lineToCheck = generateDiagLine(rowPos, colPos, true, false);
+                if (isValidLine(lineToCheck)) {
+                    linesToCheck.add(lineToCheck);
                 }
             }
             if (i == 3) {
-                for (int j = 1; j <= 3; j++) {
-                    int x = colPos - j;
-                    int y = rowPos + j;
-                    toCheck[i - 1][j - 1][0] = y;
-                    toCheck[i - 1][j - 1][1] = x;
+                Integer[][] lineToCheck = generateDiagLine(rowPos, colPos, false, true);
+                if (isValidLine(lineToCheck)) {
+                    linesToCheck.add(lineToCheck);
                 }
             }
             if (i == 4) {
-                for (int j = 1; j <= 3; j++) {
-                    int x = colPos - j;
-                    int y = rowPos - j;
-                    toCheck[i - 1][j - 1][0] = y;
-                    toCheck[i - 1][j - 1][1] = x;
+                Integer[][] lineToCheck = generateDiagLine(rowPos, colPos, false, false);
+                if (isValidLine(lineToCheck)) {
+                    linesToCheck.add(lineToCheck);
+                }
+            }
+            // Row
+            if (i == 5) {
+                Integer[][] lineToCheck = generateRowLine(rowPos, colPos, true);
+                if (isValidLine(lineToCheck)) {
+                    linesToCheck.add(lineToCheck);
+                }
+            }
+            if (i == 6) {
+                Integer[][] lineToCheck = generateRowLine(rowPos, colPos, false);
+                if (isValidLine(lineToCheck)) {
+                    linesToCheck.add(lineToCheck);
+                }
+            }
+            // Column
+            if (i == 7) {
+                Integer[][] lineToCheck = generateColLine(rowPos, colPos, true);
+                if (isValidLine(lineToCheck)) {
+                    linesToCheck.add(lineToCheck);
+                }
+            }
+            if (i == 8) {
+                Integer[][] lineToCheck = generateColLine(rowPos, colPos, false);
+                if (isValidLine(lineToCheck)) {
+                    linesToCheck.add(lineToCheck);
                 }
             }
         }
-        return toCheck;
+        return linesToCheck;
+    }
+
+    private boolean isValidLine(Integer[][] line) {
+        for (Integer[] coord : line) {
+            Integer row = coord[0];
+            Integer col = coord[1];
+            if (row < 0 || row > 5 || col < 0 || col > 6) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private Integer[][] generateDiagLine(int rowPos, int colPos, boolean increaseX, boolean increaseY) {
+        Integer[][] lineToCheck = new Integer[3][2];
+        for (int j = 1; j <= 3; j++) {
+            int x;
+            int y;
+            if (increaseX && increaseY) {
+                x = colPos + j;
+                y = rowPos + j;
+            } else if (!increaseX && increaseY) {
+                x = colPos - j;
+                y = rowPos + j;
+            } else if (increaseX && !increaseY) {
+                x = colPos + j;
+                y = rowPos - j;
+            } else {
+                x = colPos - j;
+                y = rowPos - j;
+            }
+            lineToCheck[j - 1][0] = y;
+            lineToCheck[j - 1][1] = x;
+        }
+        return lineToCheck;
+    }
+
+    private Integer[][] generateRowLine(int rowPos, int colPos, boolean advancing) {
+        Integer[][] lineToCheck = new Integer[3][2];
+        for (int j = 1; j <= 3; j++) {
+            int x;
+            if (advancing) {
+                x = colPos + j;
+            } else {
+                x = colPos - j;
+            }
+            int y = rowPos;
+            Integer[] coord = new Integer[2];
+            lineToCheck[j - 1][0] = y;
+            lineToCheck[j - 1][1] = x;
+        }
+        return lineToCheck;
+    }
+
+    private Integer[][] generateColLine(int rowPos, int colPos, boolean advancing) {
+        Integer[][] lineToCheck = new Integer[3][2];
+        for (int j = 1; j <= 3; j++) {
+            int y;
+            if (advancing) {
+                y = rowPos + j;
+            } else {
+                y = rowPos - j;
+            }
+            int x = colPos;
+            Integer[] coord = new Integer[2];
+            lineToCheck[j - 1][0] = y;
+            lineToCheck[j - 1][1] = x;
+        }
+        return lineToCheck;
     }
 
     /**
