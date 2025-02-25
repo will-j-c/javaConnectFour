@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class ComputerPlayer extends Player {
     Display display;
@@ -12,10 +13,10 @@ public class ComputerPlayer extends Player {
     }
 
     @Override
-    public void takeTurn(ArrayList<Integer> validMoves) {
+    public void takeTurn(ArrayList<Integer[]> validMoves) {
         Random rand = new Random();
         int idx = rand.nextInt(validMoves.size());
-        int move = validMoves.get(idx);
+        Integer[] move = validMoves.get(idx);
         this.board.updateBoard(move, this.colour);
         this.display.displayInfoMessage(getName() + " chose column " + move);
     }

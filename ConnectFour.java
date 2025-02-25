@@ -1,18 +1,51 @@
 import java.util.Random;
 import java.util.ArrayList;
+import java.util.Arrays;
 
+/**
+ * 
+ */
 public class ConnectFour {
+    /**
+     * 
+     */
     Board board;
+    /**
+     * 
+     */
     Display display;
+    /**
+     * 
+     */
     Input playerOneInput;
+    /**
+     * 
+     */
     Input playerTwoInput;
+    /**
+     * 
+     */
     boolean isWin;
+    /**
+     * 
+     */
     boolean isDraw;
+    /**
+     * 
+     */
     Player playerOne;
+    /**
+     * 
+     */
     Player playerTwo;
+    /**
+     * 
+     */
     Player activePlayer;
 
-    // Constructor
+    /**
+     * 
+     */
     public ConnectFour() {
         this.board = new Board();
         this.display = new Display();
@@ -21,10 +54,15 @@ public class ConnectFour {
         this.playerOneInput = new Input();
     }
 
+    /**
+     * 
+     * @param repeat
+     */
     private void playGame(boolean repeat) {
         if (!repeat) {
             this.display.displayInfoMessage("Welcome to Connect 4!!");
             this.display.displayInfoMessage("Hit Ctrl + c to quit at any time");
+            this.display.displayErrorMessage("");
             this.display.displayInfoMessage("Please select a game mode:");
             this.display.displayInfoMessage("1 - 1 Player (against the computer)");
             this.display.displayInfoMessage("2 - 2 Player");
@@ -42,6 +80,9 @@ public class ConnectFour {
         }
     }
 
+    /**
+     * 
+     */
     private void onePlayerGame() {
         this.display.displayInfoMessage("Player 1, please choose your colour (\"r\" or \"y\"):");
         char playerOneColour = getColourSelection();
@@ -61,6 +102,9 @@ public class ConnectFour {
         gameLoop();
     }
 
+    /**
+     * 
+     */
     private void twoPlayerGame() {
         this.display.displayInfoMessage("Player 1, please choose your colour (\"r\" or \"y\"):");
         char playerOneColour = getColourSelection();
@@ -84,6 +128,10 @@ public class ConnectFour {
         gameLoop();
     }
 
+    /**
+     * 
+     * @return
+     */
     private char getColourSelection() {
         while (true) {
             char colChar = this.playerOneInput.charInput();
@@ -96,18 +144,23 @@ public class ConnectFour {
 
     }
 
+    /**
+     * 
+     */
     private void gameLoop() {
         try {
             while (!this.isWin && !this.isDraw) {
                 this.display.displayBoard(this.board.getBoard());
-                ArrayList<Integer> validMoves = getValidMoves();
+                ArrayList<Integer[]> validMoves = getValidMoves();
                 this.activePlayer.takeTurn(validMoves);
-                checkWinState(this.activePlayer.getColour());
+                System.out.println(Arrays.deepToString(this.activePlayer.getLastMove()));
+                // checkWinState(this.activePlayer.getColour());
                 checkDrawState();
                 if (!this.isWin && !this.isDraw) {
                     this.toggleActivePlayer();
                 }
             }
+
             if (this.isWin) {
                 this.display.displayBoard(this.board.getBoard());
                 if (!this.activePlayer.getName().equals("The Computer")) {
@@ -117,8 +170,8 @@ public class ConnectFour {
                     this.display.displayInfoMessage(this.activePlayer.getName() + " wins!!!!");
                     this.display.displayInfoMessage("Better luck next time!!!");
                 }
-                
             }
+
             if (this.isDraw) {
                 this.display.displayBoard(this.board.getBoard());
                 this.display.displayInfoMessage("The game is a draw");
@@ -131,6 +184,9 @@ public class ConnectFour {
         }
     }
 
+    /**
+     * 
+     */
     private void toggleActivePlayer() {
         if (this.activePlayer.getName().equals(this.playerOne.getName())) {
             this.activePlayer = this.playerTwo;
@@ -139,16 +195,23 @@ public class ConnectFour {
         }
     }
 
-    private ArrayList<Integer> getValidMoves() {
-        ArrayList<Integer> validMoves = new ArrayList<Integer>();
+    /**
+     * 
+     * @return
+     */
+    private ArrayList<Integer[]> getValidMoves() {
+        ArrayList<Integer[]> validMoves = new ArrayList<Integer[]>();
+        ArrayList<Integer> colsSet = new ArrayList<Integer>();
         char[][] board = this.board.getBoard();
         // Loop backwards over array to get lowest row first
         for (int i = board.length - 1; i >= 0; i--) {
             for (int j = 0; j < board[i].length; j++) {
                 // If the column is empty and not already in the list
                 if (board[i][j] == ' ') {
-                    if (!validMoves.contains(j + 1)) {
-                        validMoves.add(j + 1);
+                    Integer[] coord = { i, j };
+                    if (!colsSet.contains(j - 1)) {
+                        colsSet.add(j - 1);
+                        validMoves.add(coord);
                     }
                 }
             }
@@ -156,112 +219,21 @@ public class ConnectFour {
         return validMoves;
     }
 
+    /**
+     * 
+     * @param colour
+     */
     private void checkWinState(char colour) {
-        checkFourInARow(colour);
-        checkFourInACol(colour);
-        checkFourInADiag(colour);
+
     }
 
-    private void checkFourInARow(char colour) {
-        char[][] board = this.board.getBoard();
-        int count = 0;
-        for (int i = board.length - 1; i >= 0; i--) {
-            for (int j = 0; j < board[i].length; j++) {
-                if (board[i][j] == colour) {
-                    count += 1;
-                    if (count == 4) {
-                        this.isWin = true;
-                        return;
-                    }
-                } else {
-                    count = 0;
-                }
-            }
-        }
-    }
-
-    private void checkFourInACol(char colour) {
-        char[][] board = this.board.getBoard();
-        int count = 0;
-        // Loop through the rows, from end (i.e. bottom of board)
-        for (int i = board.length - 1; i >= 0; i--) {
-            // Loop through the columns
-            for (int j = 0; j < board[i].length; j++) {
-                if (board[i][j] == colour) {
-                    count += 1;
-                    int[][] toCheck = toCheckFourInACol(j, i);
-                    // Loop through the coordinates to check if they are all the same colour
-                    for (int[] coords : toCheck) {
-                        try {
-                            if (board[coords[0]][coords[1]] == colour) {
-                                count += 1;
-                            } else {
-                                count = 0;
-                                break;
-                            }
-                        } catch (IndexOutOfBoundsException e) {
-                            // If the index is out of range, there is not 4 so exit the loop of toCheck and
-                            // continue
-                            break;
-                        }
-                    }
-                    if (count == 4) {
-                        this.isWin = true;
-                        return;
-                    }
-                } else {
-                    count = 0;
-                }
-            }
-        }
-    }
-
-    private int[][] toCheckFourInACol(int colPos, int rowPos) {
-        int[][] toCheck = new int[3][2];
-        for (int i = 1; i <= 3; i++) {
-            int x = colPos;
-            int y = rowPos - i;
-            toCheck[i - 1][0] = y;
-            toCheck[i - 1][1] = x;
-        }
-        return toCheck;
-    }
-
-    private void checkFourInADiag(char colour) {
-        char[][] board = this.board.getBoard();
-        int count = 0;
-        for (int i = board.length - 1; i >= 0; i--) {
-            for (int j = 0; j < board[i].length; j++) {
-                if (board[i][j] == colour) {
-                    count += 1;
-                    int[][][] toCheck = toCheckFourInADiag(j, i);
-                    // Loop through each check to make
-                    for (int k = 0; k < toCheck.length; k++) {
-                        for (int[] coords : toCheck[k]) {
-                            try {
-                                if (board[coords[0]][coords[1]] == colour) {
-                                    count += 1;
-                                } else {
-                                    count = 0;
-                                    break;
-                                }
-                            } catch (IndexOutOfBoundsException e) {
-                                // Do nothing, continue to check
-                            }
-                        }
-                    }
-                    if (count == 4) {
-                        this.isWin = true;
-                        return;
-                    }
-                } else {
-                    count = 0;
-                }
-            }
-        }
-    }
-
-    private int[][][] toCheckFourInADiag(int colPos, int rowPos) {
+    /**
+     * 
+     * @param colPos
+     * @param rowPos
+     * @return
+     */
+    private int[][][] toCheck(int colPos, int rowPos) {
         int[][][] toCheck = new int[4][3][2];
         for (int i = 1; i <= 4; i++) {
             if (i == 1) {
@@ -300,6 +272,9 @@ public class ConnectFour {
         return toCheck;
     }
 
+    /**
+     * 
+     */
     private void checkDrawState() {
         char[][] board = this.board.getBoard();
         // Loop forwards over the rows looking for empty spaces
@@ -315,6 +290,10 @@ public class ConnectFour {
         this.isDraw = true;
     }
 
+    /**
+     * 
+     * @param args
+     */
     public static void main(String[] args) {
         ConnectFour game = new ConnectFour();
         game.playGame(false);

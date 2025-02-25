@@ -4,6 +4,7 @@ public abstract class Player {
     String name;
     char colour;
     Board board;
+    Integer[] lastMove;
 
     // Constructor
     public Player(Board board, char colour) {
@@ -24,5 +25,9 @@ public abstract class Player {
         return this.colour;
     }
 
-    public abstract void takeTurn(ArrayList<Integer> validMoves);
+    public Integer[] getLastMove() {
+        return this.lastMove;
+    }
+
+    public abstract void takeTurn(ArrayList<Integer[]> validMoves);
 }

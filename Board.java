@@ -20,12 +20,11 @@ public class Board {
         return this.board;
     }
 
-    public void updateBoard(int col, char colour) {
-        for (int i = this.board.length - 1; i >= 0; i--) {
-            if (board[i][col - 1] == ' ') {
-                board[i][col - 1] = colour;
-                break;
-            }
-        }
+    public void updateBoard(Integer[] pos, char colour) {
+        this.board[pos[0]][pos[1]] = colour;
+    }
+
+    public char getPieceAtPosition(char[] position) {
+        return this.board[position[0]][position[0]];
     }
 }

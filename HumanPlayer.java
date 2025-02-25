@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 
 public class HumanPlayer extends Player {
@@ -13,25 +14,45 @@ public class HumanPlayer extends Player {
     }
 
     @Override
-    public void takeTurn(ArrayList<Integer> validMoves) {
+    public void takeTurn(ArrayList<Integer[]> validMoves) {
+        for (Integer[] entry : validMoves) {
+            System.out.println(Arrays.deepToString(entry));
+        }
         boolean validMove = false;
+        ArrayList<Integer> validCols = validCols(validMoves);
         String colour = getColour() == 'r' ? "red" : "yellow";
         this.display.displayInfoMessage(getName() + " , you are " + colour);
         this.display.displayInfoMessage("Please enter your move:");
+
         try {
-            while (!validMove) {
+            while(!validMove) {
                 int selection = this.playerInput.intInput();
-                if (validMoves.contains(selection)) {
-                    this.board.updateBoard(selection, this.colour);
-                    break;
+                if (validCols.contains(selection - 1)) {
+                    validMoves.forEach(coord -> {
+                        if (coord[1] == (selection - 1)) {
+                            this.lastMove = coord;
+                            this.board.updateBoard(this.lastMove, getColour());      
+                        }
+                    });
+                    validMove = true;
                 } else {
-                    this.display.displayErrorMessage("Column " + selection + " is not valid. Please enter a valid column.");
+                    this.display.displayErrorMessage("Please enter a valid column number to play");
                 }
-            }
+            }  
         } catch (InputMismatchException e) {
-            this.display.displayErrorMessage("Please enter a valid column number");
+            this.display.displayErrorMessage("Please enter a valid column number to play");
             this.playerInput.next();
             takeTurn(validMoves);
+        }    
+    }
+
+    private ArrayList<Integer> validCols(ArrayList<Integer[]> validMoves) {
+        ArrayList<Integer> validCols = new ArrayList<Integer>();
+        for (int i = 0; i < validMoves.size(); i++) {
+            validCols.add(validMoves.get(i)[1]);
         }
+        validCols.sort(null);
+        System.out.println(validCols);
+        return validCols;
     }
 }
