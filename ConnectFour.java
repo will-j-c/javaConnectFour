@@ -3,48 +3,76 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * 
+ * <p>
+ * Command line implementation of the Connect 4 game by Hasbro.
+ * </p>
+ * <p>
+ * This class handles all the game logic, including initialising 1 player and 2
+ * player games, running the game loop and checking win and draw states. It has
+ * the main entry point for the program.
+ * </p>
  */
 public class ConnectFour {
     /**
-     * 
+     * <p>
+     * Declaration of the Board.
+     * </p>
      */
     Board board;
     /**
-     * 
+     * <p>
+     * Declaration of the display.
+     * </p>
      */
     Display display;
     /**
-     * 
+     * <p>
+     * Declaration of Input for player one
+     * </p>
      */
     Input playerOneInput;
     /**
-     * 
+     * <p>
+     * Declaration of Input for player two
+     * </p>
      */
     Input playerTwoInput;
     /**
-     * 
+     * <p>
+     * Declaration of variable to track win state
+     * </p>
      */
     boolean isWin;
     /**
-     * 
+     * <p>
+     * Declaration of variable to track draw state
+     * </p>
      */
     boolean isDraw;
     /**
-     * 
+     * <p>
+     * Declaration of player one
+     * </p>
      */
     Player playerOne;
     /**
-     * 
+     * <p>
+     * Declaration of player two
+     * </p>
      */
     Player playerTwo;
     /**
-     * 
+     * <p>
+     * Declaration of the active player
+     * </p>
      */
     Player activePlayer;
 
     /**
-     * 
+     * <p>
+     * Constructs the game and initialises the board, display, input of first player
+     * and win/draw states.
+     * </p>
      */
     public ConnectFour() {
         this.board = new Board();
@@ -55,6 +83,10 @@ public class ConnectFour {
     }
 
     /**
+     * <p>
+     * Method that starts the games and instructs the player on the initial setup.
+     * Options include either a one player or two player game.
+     * </p>
      * 
      * @param repeat
      */
@@ -80,7 +112,10 @@ public class ConnectFour {
     }
 
     /**
-     * 
+     * <p>
+     * Methods that starts a one player game. Handles logic for selecting a colour,
+     * initialising the human and computer players and setting player name.
+     * </p>
      */
     private void onePlayerGame() {
         this.display.displayInfoMessage("Player 1, please choose your colour (\"r\" or \"y\"):");
@@ -102,7 +137,12 @@ public class ConnectFour {
     }
 
     /**
-     * 
+     * <p>
+     * Methods that starts a two player game. Handles logic for selecting a colour
+     * for player 1,
+     * initialising two human players and setting players' names. The method selects
+     * a player at random to go first.
+     * </p>
      */
     private void twoPlayerGame() {
         this.display.displayInfoMessage("Player 1, please choose your colour (\"r\" or \"y\"):");
@@ -128,8 +168,12 @@ public class ConnectFour {
     }
 
     /**
+     * <p>
+     * Method that handles errors in player colour selection. Loops until the player
+     * selects a correct piece.
+     * </p>
      * 
-     * @return
+     * @return char r or y representing red and yellow
      */
     private char getColourSelection() {
         while (true) {
@@ -140,11 +184,12 @@ public class ConnectFour {
                 this.display.displayErrorMessage("Please enter a valid colour");
             }
         }
-
     }
 
     /**
-     * 
+     * Method that starts the game loop, displays the board and checks win/draw
+     * states, The methods loops until there is a winner, it is a draw or the game
+     * is exited.
      */
     private void gameLoop() {
         try {
@@ -158,7 +203,7 @@ public class ConnectFour {
                     this.toggleActivePlayer();
                 }
             }
-
+            // Messages to display on win.
             if (this.isWin) {
                 this.display.displayBoard(this.board.getBoard());
                 if (!this.activePlayer.getName().equals("The Computer")) {
@@ -169,12 +214,13 @@ public class ConnectFour {
                     this.display.displayInfoMessage("Better luck next time!!!");
                 }
             }
-
+            // MEssages to display on draw
             if (this.isDraw) {
                 this.display.displayBoard(this.board.getBoard());
                 this.display.displayInfoMessage("The game is a draw");
             }
         } finally {
+            // Close the input streams
             this.playerOneInput.close();
             if (!this.playerTwo.getName().equals("The Computer")) {
                 this.playerTwoInput.close();
@@ -183,7 +229,9 @@ public class ConnectFour {
     }
 
     /**
-     * 
+     * <p>
+     * Method to toggle the active player when a turn is played.
+     * </p>
      */
     private void toggleActivePlayer() {
         if (this.activePlayer.getName().equals(this.playerOne.getName())) {
@@ -194,8 +242,12 @@ public class ConnectFour {
     }
 
     /**
+     * <p>
+     * Method to build a list of valid moves in the format [roe, column] by looping
+     * over the board and building a list of the first column that is empty.
+     * </p>
      * 
-     * @return
+     * @return An ArrayList of coordinate arrays with valid moves.
      */
     private ArrayList<Integer[]> getValidMoves() {
         ArrayList<Integer[]> validMoves = new ArrayList<Integer[]>();
@@ -218,8 +270,11 @@ public class ConnectFour {
     }
 
     /**
+     * Method that checks and updates the win state by building a moving window of
+     * wining moves based on the last move and checking if there are 4 in a row,
+     * column or diagonal of the same colour.
      * 
-     * @param colour
+     * @param colour the char r or y
      */
     private void checkWinState(char colour, Integer[] position) {
         int rowPos = position[0];
@@ -244,10 +299,16 @@ public class ConnectFour {
     }
 
     /**
+     * <p>
+     * Method that builds the window of possible winning diagonals, rows and columns
+     * based on the last move the player made. The 3D array returned only contains
+     * valid combinations (i.e. those that do not extend outside of the confines of
+     * the board).
+     * </p>
      * 
-     * @param colPos
-     * @param rowPos
-     * @return
+     * @param colPos An integer representing the column of the last move
+     * @param rowPos An integer representing the row of the last move
+     * @return A 3D array of possible winning combinations
      */
     private ArrayList<Integer[][]> toCheck(int rowPos, int colPos) {
         ArrayList<Integer[][]> linesToCheck = new ArrayList<Integer[][]>();
@@ -308,9 +369,13 @@ public class ConnectFour {
     }
 
     /**
+     * <p>
+     * A method that returns if a line calculated in the above method is valid (i.e.
+     * inside the board parameters).
+     * </p>
      * 
-     * @param line
-     * @return
+     * @param line A 2D array of coordinate lines calculated.
+     * @return True if it is a valid line, false otherwise.
      */
     private boolean isValidLine(Integer[][] line) {
         for (Integer[] coord : line) {
@@ -324,12 +389,18 @@ public class ConnectFour {
     }
 
     /**
+     * <p>
+     * Generates valid winning combinations in the diagonals based on a column and
+     * row input.
+     * </p>
      * 
-     * @param rowPos
-     * @param colPos
-     * @param increaseX
-     * @param increaseY
-     * @return
+     * @param rowPos    Integer representing the row of the last move.
+     * @param colPos    Integer representing the column of the last move.
+     * @param increaseX A boolean declaring that the diagonal is increasing in the X
+     *                  axis
+     * @param increaseY A boolean declaring that the diagonal is increasing in the Y
+     *                  axis
+     * @return A 2D array of Integer coordinates.
      */
     private Integer[][] generateDiagLine(int rowPos, int colPos, boolean increaseX, boolean increaseY) {
         Integer[][] lineToCheck = new Integer[3][2];
@@ -356,11 +427,15 @@ public class ConnectFour {
     }
 
     /**
+     * <p>
+     * Method to generate valid winning move combinations on a row basis.
+     * </p>
      * 
-     * @param rowPos
-     * @param colPos
-     * @param advancing
-     * @return
+     * @param rowPos    Integer representing the row of the last move.
+     * @param colPos    Integer representing the column of the last move.
+     * @param advancing Boolean representing if the window should advance along the
+     *                  row.
+     * @return A 2D array of Integer coordinates.
      */
     private Integer[][] generateRowLine(int rowPos, int colPos, boolean advancing) {
         Integer[][] lineToCheck = new Integer[3][2];
@@ -380,11 +455,15 @@ public class ConnectFour {
     }
 
     /**
+     * <p>
+     * Method to generate valid winning move combinations on a column basis.
+     * </p>
      * 
-     * @param rowPos
-     * @param colPos
-     * @param advancing
-     * @return
+     * @param rowPos    Integer representing the row of the last move.
+     * @param colPos    Integer representing the column of the last move.
+     * @param advancing Boolean representing if the window should advance along the
+     *                  column.
+     * @return A 2D array of Integer coordinates.
      */
     private Integer[][] generateColLine(int rowPos, int colPos, boolean advancing) {
         Integer[][] lineToCheck = new Integer[3][2];
@@ -404,7 +483,9 @@ public class ConnectFour {
     }
 
     /**
-     * 
+     * <p>
+     * Checks if the board is full updates the draw state to true if so.
+     * </p>
      */
     private void checkDrawState() {
         char[][] board = this.board.getBoard();
@@ -422,6 +503,9 @@ public class ConnectFour {
     }
 
     /**
+     * <p>
+     * Program main entry point. This should be run to play the game.
+     * </p>
      * 
      * @param args
      */
