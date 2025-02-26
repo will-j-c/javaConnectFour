@@ -61,8 +61,7 @@ public class ConnectFour {
     private void playGame(boolean repeat) {
         if (!repeat) {
             this.display.displayInfoMessage("Welcome to Connect 4!!");
-            this.display.displayInfoMessage("Hit Ctrl + c to quit at any time");
-            this.display.displayErrorMessage("");
+            this.display.displayInfoMessage("Hit Ctrl + c to quit at any time\n");
             this.display.displayInfoMessage("Please select a game mode:");
             this.display.displayInfoMessage("1 - 1 Player (against the computer)");
             this.display.displayInfoMessage("2 - 2 Player");
@@ -151,7 +150,6 @@ public class ConnectFour {
         try {
             while (!this.isWin && !this.isDraw) {
                 this.display.displayBoard(this.board.getBoard());
-                this.board.removeX();
                 ArrayList<Integer[]> validMoves = getValidMoves();
                 this.activePlayer.takeTurn(validMoves);
                 checkWinState(this.activePlayer.getColour(), this.activePlayer.getLastMove());
@@ -230,24 +228,17 @@ public class ConnectFour {
         int count;
         for (Integer[][] lineToCheck : linesToCheck) {
             count = 1;
-            System.out.println(Arrays.deepToString(lineToCheck));
             for (Integer[] coord : lineToCheck) {
-                this.board.updateBoard(coord, 'x');
-
                 if (this.board.getPieceAtPosition(coord) == colour) {
-                    System.out.println("Active player colour; " + colour);
-                    System.out.println(
-                            "Piece at " + Arrays.deepToString(coord) + " is " + this.board.getPieceAtPosition(coord));
                     count += 1;
-                    System.out.println(count);
                 } else {
                     count = 0;
-                    // break;
+                    break;
                 }
             }
             if (count >= 4) {
                 this.isWin = true;
-                // break;
+                break;
             }
         }
     }
