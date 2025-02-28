@@ -1,6 +1,5 @@
 import java.util.Random;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * <p>
@@ -447,7 +446,6 @@ public class ConnectFour {
                 x = colPos - j;
             }
             int y = rowPos;
-            Integer[] coord = new Integer[2];
             lineToCheck[j - 1][0] = y;
             lineToCheck[j - 1][1] = x;
         }
@@ -475,7 +473,6 @@ public class ConnectFour {
                 y = rowPos - j;
             }
             int x = colPos;
-            Integer[] coord = new Integer[2];
             lineToCheck[j - 1][0] = y;
             lineToCheck[j - 1][1] = x;
         }
