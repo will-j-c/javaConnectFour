@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 /**
- * 
+ * <p>Abstract class for the implementation of player logic. Cannot be directly </p>
  */
 public abstract class Player {
     /**
