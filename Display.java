@@ -1,9 +1,15 @@
 /**
- * 
+ * <p>
+ * Class to deal with logic of printing the board and other messages to the
+ * terminal.
+ * </p>
  */
 public class Display implements Displayable {
     /**
-     * 
+     * <p>
+     * Final variables of ANSI colour codes that will print colours to the terminal
+     * in Unix environments. Will not work with Windows according to documentation.
+     * </p>
      */
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BOARD_BACKGROUND = "\u001B[46m";
@@ -13,7 +19,9 @@ public class Display implements Displayable {
     public static final String ANSI_GREEN_TEXT = "\u001B[32m";
 
     /**
-     * 
+     * <p>
+     * Main method to display the board to the terminal.
+     * </p>
      */
     @Override
     public void displayBoard(char[][] board) {
@@ -57,6 +65,9 @@ public class Display implements Displayable {
     }
 
     /**
+     * <p>
+     * Method that prints the character in a space with appropriate colours.
+     * </p>
      * 
      * @param c
      * @param terminal
@@ -73,7 +84,9 @@ public class Display implements Displayable {
     }
 
     /**
-     * 
+     * <p>
+     * Method to display and info message to the terminal.
+     * </p>
      */
     @Override
     public void displayInfoMessage(String message) {
@@ -81,7 +94,9 @@ public class Display implements Displayable {
     }
 
     /**
-     * 
+     * <p>
+     * Method to display an error message to the terminal.
+     * </p>
      */
     @Override
     public void displayErrorMessage(String message) {
