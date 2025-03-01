@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * A class to represent the computer player. Currently takes a random move.
@@ -10,7 +9,8 @@ public class ComputerPlayer extends Player {
      * Declaration of the display variable.
      * </p>
      */
-    Display display;
+    private Display display;
+    private RandAI ai;
 
     /**
      * <p>
@@ -24,9 +24,10 @@ public class ComputerPlayer extends Player {
      *                game.
      * @param colour  A char representing yellow or red.
      */
-    ComputerPlayer(Display display, Board board, char colour) {
+    public ComputerPlayer(Display display, Board board, char colour) {
         super(board, colour);
         this.display = display;
+        this.ai = new RandAI();
         setName("The Computer");
     }
 
@@ -35,12 +36,12 @@ public class ComputerPlayer extends Player {
      * Implementation of the abstract takeTurn method inherited from Player. Defines
      * the logic on taking a turn. Records output in lastTurn.
      * </p>
+     * 
+     * @param validMoves ArrayList of valid coordinates.
      */
     @Override
     public void takeTurn(ArrayList<Integer[]> validMoves) {
-        Random rand = new Random();
-        int idx = rand.nextInt(validMoves.size());
-        Integer[] move = validMoves.get(idx);
+        Integer[] move = this.ai.selectMove(validMoves);
         this.lastMove = move;
         this.board.updateBoard(move, this.colour);
         this.display.displayInfoMessage(getName() + " chose column " + (move[1] + 1));
