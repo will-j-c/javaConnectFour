@@ -13,13 +13,13 @@ public class HumanPlayer extends Player {
      * Declaration of a variable to hold the player Input instance.
      * </p>
      */
-    Input playerInput;
+    private Input playerInput;
     /**
      * <p>
      * Declaration of a variable to hold the Display instance.
      * </p>
      */
-    Display display;
+    private Display display;
 
     /**
      * <p>
@@ -31,7 +31,7 @@ public class HumanPlayer extends Player {
      * @param board       The board Instance.
      * @param colour      The player colour character.
      */
-    HumanPlayer(Input playerInput, Display display, Board board, char colour) {
+    public HumanPlayer(Input playerInput, Display display, Board board, char colour) {
         super(board, colour);
         this.playerInput = playerInput;
         this.display = display;

@@ -11,7 +11,7 @@ public class Input implements Inputtable {
      * Declaration of the scanner to stream user input.
      * </p>
      */
-    Scanner scanner;
+    private Scanner scanner;
 
     /**
      * <p>

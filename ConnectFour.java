@@ -17,55 +17,55 @@ public class ConnectFour {
      * Declaration of the Board.
      * </p>
      */
-    Board board;
+    private Board board;
     /**
      * <p>
      * Declaration of the display.
      * </p>
      */
-    Display display;
+    private Display display;
     /**
      * <p>
      * Declaration of Input for player one
      * </p>
      */
-    Input playerOneInput;
+    private Input playerOneInput;
     /**
      * <p>
      * Declaration of Input for player two
      * </p>
      */
-    Input playerTwoInput;
+    private Input playerTwoInput;
     /**
      * <p>
      * Declaration of variable to track win state
      * </p>
      */
-    boolean isWin;
+    private boolean isWin;
     /**
      * <p>
      * Declaration of variable to track draw state
      * </p>
      */
-    boolean isDraw;
+    private boolean isDraw;
     /**
      * <p>
      * Declaration of player one
      * </p>
      */
-    Player playerOne;
+    private Player playerOne;
     /**
      * <p>
      * Declaration of player two
      * </p>
      */
-    Player playerTwo;
+    private Player playerTwo;
     /**
      * <p>
      * Declaration of the active player
      * </p>
      */
-    Player activePlayer;
+    private Player activePlayer;
 
     /**
      * <p>
@@ -504,7 +504,7 @@ public class ConnectFour {
      * Program main entry point. This should be run to play the game.
      * </p>
      * 
-     * @param args
+     * @param args Command line arguments.
      */
     public static void main(String[] args) {
         ConnectFour game = new ConnectFour();

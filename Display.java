@@ -11,12 +11,12 @@ public class Display implements Displayable {
      * in Unix environments. Will not work with Windows according to documentation.
      * </p>
      */
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_BOARD_BACKGROUND = "\u001B[46m";
-    public static final String ANSI_YELLOW_BACKGROUND = "\u001B[43m";
-    public static final String ANSI_RED_BACKGROUND = "\u001B[41m";
-    public static final String ANSI_RED_TEXT = "\u001B[31m";
-    public static final String ANSI_GREEN_TEXT = "\u001B[32m";
+    private static final String ANSI_RESET = "\u001B[0m";
+    private static final String ANSI_BOARD_BACKGROUND = "\u001B[46m";
+    private static final String ANSI_YELLOW_BACKGROUND = "\u001B[43m";
+    private static final String ANSI_RED_BACKGROUND = "\u001B[41m";
+    private static final String ANSI_RED_TEXT = "\u001B[31m";
+    private static final String ANSI_GREEN_TEXT = "\u001B[32m";
 
     /**
      * <p>
@@ -32,10 +32,10 @@ public class Display implements Displayable {
                     System.out.print(ANSI_BOARD_BACKGROUND + "|" + ANSI_RESET);
                 }
                 if (j == board[i].length - 1) {
-                    String toPrint = spaceString(board[i][j], true);
+                    String toPrint = spaceString(board[i][j]);
                     System.out.print(toPrint);
                 } else {
-                    String toPrint = spaceString(board[i][j], false);
+                    String toPrint = spaceString(board[i][j]);
                     System.out.print(toPrint);
                 }
             }
@@ -69,18 +69,17 @@ public class Display implements Displayable {
      * Method that prints the character in a space with appropriate colours.
      * </p>
      * 
-     * @param c
-     * @param terminal
-     * @return
+     * @param colour A character r or y.
+     * @return A string to be printed to the display.
      */
-    private String spaceString(char c, boolean terminal) {
-        if (c == 'y') {
-            return ANSI_YELLOW_BACKGROUND + " " + c + " " + ANSI_RESET + ANSI_BOARD_BACKGROUND + "|" + ANSI_RESET;
+    private String spaceString(char colour) {
+        if (colour == 'y') {
+            return ANSI_YELLOW_BACKGROUND + " " + colour + " " + ANSI_RESET + ANSI_BOARD_BACKGROUND + "|" + ANSI_RESET;
         }
-        if (c == 'r') {
-            return ANSI_RED_BACKGROUND + " " + c + " " + ANSI_RESET + ANSI_BOARD_BACKGROUND + "|" + ANSI_RESET;
+        if (colour == 'r') {
+            return ANSI_RED_BACKGROUND + " " + colour + " " + ANSI_RESET + ANSI_BOARD_BACKGROUND + "|" + ANSI_RESET;
         }
-        return ANSI_BOARD_BACKGROUND + " " + c + " " + ANSI_RESET + ANSI_BOARD_BACKGROUND + "|" + ANSI_RESET;
+        return ANSI_BOARD_BACKGROUND + " " + colour + " " + ANSI_RESET + ANSI_BOARD_BACKGROUND + "|" + ANSI_RESET;
     }
 
     /**

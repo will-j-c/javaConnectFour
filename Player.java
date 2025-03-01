@@ -12,29 +12,30 @@ public abstract class Player {
      * Declaration of name variable.
      * </p>
      */
-    String name;
+    private String name;
     /**
      * <p>
      * Declaration of colour variable.
      * </p>
      */
-    char colour;
+    protected char colour;
     /**
      * <p>
      * Declaration of board variable.
      * </p>
      */
-    Board board;
+    protected Board board;
     /**
      * <p>
      * Declaration of the last move variable.
      * </p>
      */
-    Integer[] lastMove;
+    protected Integer[] lastMove;
 
     /**
      * <p>
-     * <Constructor that initialises the board instance and colour of the player./p>
+     * Constructor that initialises the board instance and colour of the player.
+     * </p>
      * 
      * @param board  A board instance.
      * @param colour A character r or y representing red and yellow.

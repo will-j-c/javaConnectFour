@@ -4,6 +4,22 @@ import java.util.ArrayList;
 public class RandAI implements Thinkable {
     /**
      * <p>
+     * Declaration of a variable that will implement the Random java util class.
+     * </p>
+     */
+    private Random rand;
+
+    /**
+     * <p>
+     * Constructor that initialises the AI instance.
+     * </p>
+     */
+    public RandAI() {
+        this.rand = new Random();
+    }
+
+    /**
+     * <p>
      * A method that selects a valid move from a list of valid moves using random
      * logic.
      * </p>
@@ -13,8 +29,7 @@ public class RandAI implements Thinkable {
      */
     @Override
     public Integer[] selectMove(ArrayList<Integer[]> validMoves) {
-        Random rand = new Random();
-        int idx = rand.nextInt(validMoves.size());
+        int idx = this.rand.nextInt(validMoves.size());
         Integer[] move = validMoves.get(idx);
         return move;
     }
