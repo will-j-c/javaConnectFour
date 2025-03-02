@@ -1,5 +1,6 @@
 import java.util.Random;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 
 /**
  * <p>
@@ -90,22 +91,28 @@ public class ConnectFour {
      * @param repeat
      */
     private void playGame(boolean repeat) {
-        if (!repeat) {
-            this.display.displayInfoMessage("Welcome to Connect 4!!");
-            this.display.displayInfoMessage("Hit Ctrl + c to quit at any time\n");
-            this.display.displayInfoMessage("Please select a game mode:");
-            this.display.displayInfoMessage("1 - 1 Player (against the computer)");
-            this.display.displayInfoMessage("2 - 2 Player");
-        }
+        try {
+            if (!repeat) {
+                this.display.displayInfoMessage("Welcome to Connect 4!!");
+                this.display.displayInfoMessage("Hit Ctrl + c to quit at any time\n");
+                this.display.displayInfoMessage("Please select a game mode:");
+                this.display.displayInfoMessage("1 - 1 Player (against the computer)");
+                this.display.displayInfoMessage("2 - 2 Player");
+            }
 
-        int selection = this.playerOneInput.intInput();
-        if (selection == 1) {
-            onePlayerGame();
-        } else if (selection == 2) {
-            this.playerTwoInput = new Input();
-            twoPlayerGame();
-        } else {
+            int selection = this.playerOneInput.intInput();
+            if (selection == 1) {
+                onePlayerGame();
+            } else if (selection == 2) {
+                this.playerTwoInput = new Input();
+                twoPlayerGame();
+            } else {
+                this.display.displayErrorMessage("Please enter 1 or 2 only.");
+                playGame(true);
+            }
+        } catch (InputMismatchException e) {
             this.display.displayErrorMessage("Please enter 1 or 2 only.");
+            this.playerOneInput.next();
             playGame(true);
         }
     }
